@@ -10,6 +10,12 @@ An intentionally vulnerable multi-service lab for practicing realistic bug bount
 > [!WARNING]
 > This repository is intentionally insecure. Run it only in an isolated local lab and never expose it to the public internet.
 
+## Completion Award
+
+[![Subash completion badge](achievements/badges/subash107-full-lab-completion.svg)](achievements/certificates/subash107-full-lab-completion.html)
+
+Subash earned the `Full Lab Completion` award for completing the lab workflow, validation, and reporting path.
+
 ## Why This Repo
 
 - Practice realistic vulnerability chaining across multiple services.
