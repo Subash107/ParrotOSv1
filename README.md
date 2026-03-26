@@ -1,11 +1,11 @@
-# Acme DevSecOps Bug Bounty Simulation Lab
+# ParrotOS Bug Hunting Local Lab
 
 [![Security Lab Workflow](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml/badge.svg?branch=main)](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml)
 [![Docker Compose](https://img.shields.io/badge/docker-compose-lab-blue?logo=docker)](#quick-start)
 [![Node 20](https://img.shields.io/badge/node-20-339933?logo=node.js&logoColor=white)](#repository-layout)
 [![Training Only](https://img.shields.io/badge/use-training%20only-red)](#safety-note)
 
-An intentionally vulnerable multi-service lab for practicing realistic bug bounty and DevSecOps workflows on a local machine. The stack combines a front end, API, admin panel, object storage, and MySQL so you can exercise reconnaissance, exploitation, reporting, and validation in one place.
+A hands-on local security lab for practicing realistic bug bounty workflows on ParrotOS and Windows. The repository wraps an intentionally vulnerable Acme multi-service stack with guided methodology, reporting templates, Windows batch helpers, and wireless assessment starter files so you can train reconnaissance, exploitation, validation, and write-ups in one place.
 
 > [!WARNING]
 > This repository is intentionally insecure. Run it only in an isolated local lab and never expose it to the public internet.
@@ -23,6 +23,7 @@ If you want to show this badge in your GitHub profile README too, use the ready-
 - Practice realistic vulnerability chaining across multiple services.
 - Reproduce common bug bounty classes like IDOR, JWT tampering, broken access control, and XSS.
 - Generate cleaner deliverables with included methodology notes, findings, executive reporting, and platform-ready templates.
+- Run repeatable checks from ParrotOS or Windows with the included helper scripts and report generators.
 - Use Burp Suite or ZAP with a guided workflow instead of a toy single-endpoint demo.
 
 ## Quick Start
