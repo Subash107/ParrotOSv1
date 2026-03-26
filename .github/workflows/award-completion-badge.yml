@@ -83,9 +83,12 @@ jobs:
             ${{ steps.generate.outputs.record_path }}
 
       - name: Commit generated assets
+        env:
+          ACTOR_NAME: ${{ github.actor }}
+          ACTOR_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "$ACTOR_NAME"
+          git config user.email "$ACTOR_EMAIL"
           git add achievements
           if git diff --cached --quiet; then
             echo "No changes to commit."
