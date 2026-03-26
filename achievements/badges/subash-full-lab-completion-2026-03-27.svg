@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Full Lab Completion badge</title>
+  <desc id="desc">Completion badge for Subash in the Acme DevSecOps Bug Bounty Simulation Lab.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#172554" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)" />
+  <rect x="32" y="32" width="1136" height="566" rx="28" fill="none" stroke="#334155" stroke-width="2" />
+  <rect x="72" y="76" width="238" height="42" rx="21" fill="#0b1220" stroke="#22c55e" />
+  <text x="191" y="104" text-anchor="middle" font-size="20" font-weight="700" fill="#86efac">ACME LAB AWARD</text>
+  <text x="72" y="150" font-size="20" font-weight="600" fill="#93c5fd">Certificate of completion</text>
+    <text x="72" y="182" font-size="46" font-weight="700" fill="#f8fafc">Subash</text>
+  <text x="72" y="292" font-size="28" font-weight="500" fill="#cbd5e1">Full Lab Completion</text>
+  <rect x="72" y="332" width="452" height="8" rx="4" fill="url(#accent)" />
+  <text x="72" y="392" font-size="24" fill="#cbd5e1">Awarded for completing the intentionally vulnerable training lab.</text>
+  <text x="72" y="438" font-size="22" fill="#94a3b8">Issued March 27, 2026</text>
+  <text x="72" y="542" font-size="20" fill="#64748b">@Subash107</text>
+  <circle cx="963" cy="236" r="116" fill="#0b1220" stroke="url(#accent)" stroke-width="10" />
+  <path d="M928 236l24 24 46-58" fill="none" stroke="#4ade80" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="963" y="405" text-anchor="middle" font-size="24" font-weight="700" fill="#e2e8f0">VERIFIED</text>
+  <text x="963" y="440" text-anchor="middle" font-size="18" fill="#93c5fd">training completion</text>
+  <text x="963" y="517" text-anchor="middle" font-size="18" fill="#64748b">github.com/Subash107/ParrotOS</text>
+</svg>
