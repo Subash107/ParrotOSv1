@@ -1,0 +1,14 @@
+{
+  "name": "acme-api",
+  "version": "1.0.0",
+  "description": "Intentionally vulnerable API for the Acme bug bounty lab",
+  "main": "src/api.js",
+  "scripts": {
+    "start": "node src/api.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.5"
+  }
+}

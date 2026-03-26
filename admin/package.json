@@ -1,0 +1,13 @@
+{
+  "name": "acme-admin",
+  "version": "1.0.0",
+  "description": "Intentionally vulnerable admin panel for the Acme bug bounty lab",
+  "main": "src/admin.js",
+  "scripts": {
+    "start": "node src/admin.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.11.5"
+  }
+}

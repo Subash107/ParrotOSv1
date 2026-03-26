@@ -1,0 +1,135 @@
+services:
+  app:
+    build:
+      context: ./app
+    hostname: app.acme.local
+    environment:
+      PORT: 3000
+      API_BASE_URL: http://api.acme.local:3000
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "8080:3000"
+    networks:
+      acme-net:
+        aliases:
+          - app.acme.local
+
+  api:
+    build:
+      context: ./api
+    hostname: api.acme.local
+    environment:
+      PORT: 3000
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: acme
+      DB_USER: acme
+      DB_PASSWORD: acmepass
+      JWT_SECRET: secret123
+      STORAGE_ENDPOINT: http://storage.acme.local:9000
+      STORAGE_CONSOLE_URL: http://storage.acme.local:9001
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    depends_on:
+      database:
+        condition: service_healthy
+      storage:
+        condition: service_started
+    ports:
+      - "8081:3000"
+    networks:
+      acme-net:
+        aliases:
+          - api.acme.local
+
+  admin:
+    build:
+      context: ./admin
+    hostname: admin.acme.local
+    environment:
+      PORT: 3000
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: acme
+      DB_USER: acme
+      DB_PASSWORD: acmepass
+      STORAGE_CONSOLE_URL: http://storage.acme.local:9001
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "8082:3000"
+    networks:
+      acme-net:
+        aliases:
+          - admin.acme.local
+
+  storage:
+    image: minio/minio:RELEASE.2024-02-24T17-11-14Z
+    hostname: storage.acme.local
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      acme-net:
+        aliases:
+          - storage.acme.local
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      storage:
+        condition: service_started
+    entrypoint:
+      - /bin/sh
+      - /init.sh
+    volumes:
+      - ./infrastructure/minio/init.sh:/init.sh:ro
+    networks:
+      - acme-net
+
+  database:
+    image: mysql:8.0
+    hostname: database
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: acme
+      MYSQL_USER: acme
+      MYSQL_PASSWORD: acmepass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./infrastructure/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - 127.0.0.1
+        - -uroot
+        - -prootpass
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - acme-net
+
+networks:
+  acme-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  minio_data:

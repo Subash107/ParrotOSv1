@@ -1,0 +1,13 @@
+{
+  "name": "acme-frontend",
+  "version": "1.0.0",
+  "description": "Intentionally vulnerable frontend for the Acme bug bounty lab",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2"
+  }
+}

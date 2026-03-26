@@ -1,0 +1,13 @@
+Acme DevSecOps Bug Bounty Simulation Lab
+Copyright (c) 2026 Project Authors
+All rights reserved.
+
+This repository is provided for private use, training, and evaluation only.
+No permission is granted to copy, modify, distribute, sublicense, or deploy
+this material publicly without the project owner's prior written permission.
+
+This is an intentionally vulnerable educational environment. Use it only in an
+isolated lab and never expose it to the public internet.
+
+If you plan to publish this repository, replace this file with the open-source
+license you want to grant before release.
