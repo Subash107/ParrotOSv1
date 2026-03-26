@@ -1,26 +1,75 @@
 # Acme DevSecOps Bug Bounty Simulation Lab
 
-This project is an intentionally vulnerable multi-service lab that behaves like a small internal company platform. Docker Compose wires together the employee app, API, admin panel, MinIO object storage, and MySQL so you can practice realistic reconnaissance, chaining, and exploitation in a local environment.
+[![Security Lab Workflow](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml/badge.svg?branch=main)](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml)
+[![Docker Compose](https://img.shields.io/badge/docker-compose-lab-blue?logo=docker)](#quick-start)
+[![Node 20](https://img.shields.io/badge/node-20-339933?logo=node.js&logoColor=white)](#repository-layout)
+[![Training Only](https://img.shields.io/badge/use-training%20only-red)](#safety-note)
+
+An intentionally vulnerable multi-service lab for practicing realistic bug bounty and DevSecOps workflows on a local machine. The stack combines a front end, API, admin panel, object storage, and MySQL so you can exercise reconnaissance, exploitation, reporting, and validation in one place.
+
+> [!WARNING]
+> This repository is intentionally insecure. Run it only in an isolated local lab and never expose it to the public internet.
+
+## Why This Repo
+
+- Practice realistic vulnerability chaining across multiple services.
+- Reproduce common bug bounty classes like IDOR, JWT tampering, broken access control, and XSS.
+- Generate cleaner deliverables with included methodology notes, findings, executive reporting, and platform-ready templates.
+- Use Burp Suite or ZAP with a guided workflow instead of a toy single-endpoint demo.
+
+## Quick Start
+
+1. Run the bootstrap check.
+
+   Windows PowerShell:
+
+   ```powershell
+   .\scripts\setup\bootstrap.ps1
+   ```
+
+   Linux or macOS:
+
+   ```bash
+   bash scripts/setup/bootstrap.sh
+   ```
+
+2. Add these local host entries if the bootstrap script says they are missing.
+
+   ```text
+   127.0.0.1 app.acme.local
+   127.0.0.1 api.acme.local
+   127.0.0.1 admin.acme.local
+   127.0.0.1 storage.acme.local
+   ```
+
+3. Start the lab.
+
+   ```bash
+   docker compose up --build
+   ```
+
+4. Open the services:
+
+   - `http://app.acme.local:8080`
+   - `http://api.acme.local:8081`
+   - `http://admin.acme.local:8082`
+   - `http://storage.acme.local:9001`
+
+5. Use the default credentials:
+
+   - Application users: `alice / welcome123`, `bob / hunter2`, `admin / adminpass`
+   - MinIO: `minioadmin / minioadmin`
 
 ## Services
 
-- `app.acme.local` at `http://localhost:8080`
-- `api.acme.local` at `http://localhost:8081`
-- `admin.acme.local` at `http://localhost:8082`
-- `storage.acme.local` S3 API at `http://localhost:9000`
-- `storage.acme.local` console at `http://localhost:9001`
-- `database` MySQL at `localhost:3306`
-
-## Included Vulnerabilities
-
-- Weak JWT secret: `secret123`
-- JWTs have no expiration
-- Role is trusted directly from the JWT payload
-- IDOR on `GET /api/user?id=`
-- Admin panel trusts only `role: admin`
-- Stored and reflected XSS in the front end
-- MinIO default credentials and anonymous public bucket access
-- Overexposed admin and user data in the API and admin dashboard
+| Service | URL | Purpose |
+| --- | --- | --- |
+| App | `http://app.acme.local:8080` | Main employee portal |
+| API | `http://api.acme.local:8081` | Authentication and data APIs |
+| Admin | `http://admin.acme.local:8082` | Admin export and sensitive views |
+| MinIO API | `http://storage.acme.local:9000` | Object storage service |
+| MinIO Console | `http://storage.acme.local:9001` | Storage administration UI |
+| MySQL | `localhost:3306` | Backing application database |
 
 ## Repository Layout
 
@@ -40,102 +89,35 @@ This project is an intentionally vulnerable multi-service lab that behaves like 
 |   `-- src/server.js
 |-- docs/
 |   |-- guides/
-|   |   |-- BURP_ZAP_WALKTHROUGH.md
-|   |   `-- METHODOLOGY.md
 |   `-- reports/
-|       |-- BUG_BOUNTY_REPORT.md
-|       |-- BUGCROWD_TEMPLATE.md
-|       |-- EXECUTIVE_REPORT.md
-|       |-- FINDINGS.md
-|       `-- HACKERONE_TEMPLATE.md
 |-- infrastructure/
 |   |-- database/init.sql
 |   `-- minio/init.sh
 |-- scripts/
-|   `-- remote/
+|   |-- remote/
+|   `-- setup/
 |-- tools/
 |   |-- forge_admin_jwt.py
 |   `-- parrot_os_ssh_client.py
 |-- .github/workflows/security-lab.yml
-`-- docker-compose.yml
+|-- docker-compose.yml
+`-- Makefile
 ```
 
 Generated scan output and exploit artifacts are written to `reports/`.
 
-## Bootstrap
+## Documentation
 
-Run the bootstrap check once on a new machine to create the `reports/` directory, verify prerequisites, validate the Compose file, and check whether your local host aliases are present.
-
-Windows PowerShell:
-
-```powershell
-.\scripts\setup\bootstrap.ps1
-```
-
-Windows PowerShell with automatic hosts update in an elevated session:
-
-```powershell
-.\scripts\setup\bootstrap.ps1 -AddHosts
-```
-
-Linux or macOS:
-
-```bash
-bash scripts/setup/bootstrap.sh
-```
-
-Linux or macOS with automatic hosts update:
-
-```bash
-sudo bash scripts/setup/bootstrap.sh --add-hosts
-```
-
-## Documentation Map
-
-- `docs/guides/METHODOLOGY.md` for the phase-by-phase bug bounty workflow
-- `docs/guides/BURP_ZAP_WALKTHROUGH.md` for the browser-proxy walkthrough
-- `docs/reports/FINDINGS.md` for the validated findings summary
-- `docs/reports/BUG_BOUNTY_REPORT.md` for a formal bug bounty style report
-- `docs/reports/EXECUTIVE_REPORT.md` for a leadership-friendly summary
-- `docs/reports/HACKERONE_TEMPLATE.md` and `docs/reports/BUGCROWD_TEMPLATE.md` for submission-ready drafts
-
-## How To Run
-
-1. Add these host entries so the lab domains resolve locally.
-
-   ```text
-   127.0.0.1 app.acme.local
-   127.0.0.1 api.acme.local
-   127.0.0.1 admin.acme.local
-   127.0.0.1 storage.acme.local
-   ```
-
-2. Start the lab.
-
-   ```bash
-   docker compose up --build
-   ```
-
-3. Open the services:
-
-   - `http://app.acme.local:8080`
-   - `http://api.acme.local:8081`
-   - `http://admin.acme.local:8082`
-   - `http://storage.acme.local:9001`
-
-4. Use the default application credentials:
-
-   - `alice / welcome123`
-   - `bob / hunter2`
-   - `admin / adminpass`
-
-5. Use the MinIO default credentials:
-
-   - `minioadmin / minioadmin`
+- [docs/guides/METHODOLOGY.md](docs/guides/METHODOLOGY.md) for the phase-by-phase testing workflow.
+- [docs/guides/BURP_ZAP_WALKTHROUGH.md](docs/guides/BURP_ZAP_WALKTHROUGH.md) for the browser-proxy walkthrough.
+- [docs/reports/FINDINGS.md](docs/reports/FINDINGS.md) for the validated findings summary.
+- [docs/reports/BUG_BOUNTY_REPORT.md](docs/reports/BUG_BOUNTY_REPORT.md) for a formal bug bounty report.
+- [docs/reports/EXECUTIVE_REPORT.md](docs/reports/EXECUTIVE_REPORT.md) for a leadership-friendly summary.
+- [docs/reports/HACKERONE_TEMPLATE.md](docs/reports/HACKERONE_TEMPLATE.md) and [docs/reports/BUGCROWD_TEMPLATE.md](docs/reports/BUGCROWD_TEMPLATE.md) for submission-ready drafts.
 
 ## Common Commands
 
-If you have `make` available, the root [Makefile](d:/ParrotOS/acme-devsecops-lab/Makefile) wraps the most common tasks:
+If you have `make` available, the root [Makefile](Makefile) wraps the most common tasks:
 
 - `make help`
 - `make bootstrap`
@@ -149,16 +131,21 @@ If you have `make` available, the root [Makefile](d:/ParrotOS/acme-devsecops-lab
 - `make remote-methodology`
 - `make remote-recon`
 
-The repo also includes a root [`.editorconfig`](d:/ParrotOS/acme-devsecops-lab/.editorconfig) so editors pick up consistent formatting automatically.
+The repo also includes a root [`.editorconfig`](.editorconfig) for consistent editor defaults.
 
-## Networking Notes
+## Vulnerability Coverage
 
-- All services share the Docker Compose bridge network `acme-net`.
-- The front end calls the API over the internal name `api.acme.local`.
-- The admin panel and API both talk to the MySQL container internally.
-- MinIO is reachable from the other services over the internal name `storage.acme.local`.
+- Weak JWT secret: `secret123`
+- JWTs have no expiration
+- Role is trusted directly from the JWT payload
+- IDOR on `GET /api/user?id=`
+- Admin panel trusts only `role: admin`
+- Stored and reflected XSS in the front end
+- MinIO default credentials and anonymous public bucket access
+- Overexposed admin and user data in the API and admin dashboard
 
-## Vulnerability Map
+<details>
+<summary>Detailed Vulnerability Map</summary>
 
 ### Authentication flaws
 
@@ -189,7 +176,16 @@ The repo also includes a root [`.editorconfig`](d:/ParrotOS/acme-devsecops-lab/.
 - MinIO uses the default credentials `minioadmin / minioadmin`
 - The `public-assets` bucket is created automatically and exposed anonymously
 
-## Example Attack Scenarios
+</details>
+
+## Example Exploit Chains
+
+- Stored XSS in the comment feed -> steal readable session cookie -> reuse JWT -> access victim session -> tamper token role -> pull `/api/admin`
+- Enumerate `GET /api/user?id=` -> leak admin user details and API key -> add `role: admin` header -> dump the admin export -> log into MinIO with default credentials
+- Reflected XSS through `/profile?bio=` -> execute JavaScript in the victim browser -> steal the session cookie -> access admin-only API data after JWT tampering
+
+<details>
+<summary>Example Attack Scenarios</summary>
 
 ### 1. Stored XSS -> cookie theft -> account takeover
 
@@ -250,18 +246,14 @@ Example request:
 curl "http://localhost:9000/public-assets/security-note.txt"
 ```
 
-## Example Exploit Chains
-
-- Stored XSS in the comment feed -> steal readable session cookie -> reuse JWT -> access victim session -> tamper token role -> pull `/api/admin`
-- Enumerate `GET /api/user?id=` -> leak admin user details and API key -> add `role: admin` header -> dump the admin export -> log into MinIO with default credentials
-- Reflected XSS through `/profile?bio=` -> execute JavaScript in the victim browser -> steal the session cookie -> access admin-only API data after JWT tampering
+</details>
 
 ## Automation
 
-- Dockerfiles are included for `app`, `api`, and `admin`
-- `.github/workflows/security-lab.yml` builds the Compose stack, runs an Nmap scan, and performs security smoke checks
-- `scripts/remote/` contains helper scripts for scanning, exploitation, reporting, and Burp-driven verification
-- `tools/` contains the JWT forging helper and the Parrot OS SSH client
+- [`.github/workflows/security-lab.yml`](.github/workflows/security-lab.yml) builds the Compose stack, runs an Nmap scan, and performs security smoke checks.
+- [`scripts/remote/`](scripts/remote) contains helper scripts for scanning, exploitation, reporting, and Burp-driven verification.
+- [`scripts/setup/`](scripts/setup) contains bootstrap scripts for Windows and Bash-based environments.
+- [`tools/`](tools) contains the JWT forging helper and the Parrot OS SSH client.
 
 ## Cleanup
 
@@ -271,4 +263,4 @@ docker compose down -v
 
 ## Safety Note
 
-This environment is intentionally insecure. Run it only on an isolated local machine or private lab network, and do not expose it to the public internet.
+This environment is intentionally insecure. Use it only for local training, private lab work, or demo environments you control completely.
