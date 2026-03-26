@@ -298,6 +298,13 @@ curl "http://localhost:9000/public-assets/security-note.txt"
 - [`scripts/setup/`](scripts/setup) contains bootstrap scripts for Windows and Bash-based environments.
 - [`tools/`](tools) contains the JWT forging helper and the Parrot OS SSH client.
 
+## Contributing and Community
+
+- Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
+- Use [GitHub Discussions](https://github.com/Subash107/ParrotOS/discussions) for questions, lab ideas, badge-track suggestions, and learning conversations.
+- Use the built-in issue forms for reproducible bugs and scoped feature requests.
+- Open pull requests with validation notes, report paths, and screenshots when they help reviewers understand the change.
+
 ## Cleanup
 
 ```bash

@@ -1,0 +1,50 @@
+name: Feature request
+description: Propose an enhancement for the lab, docs, workflows, or contributor experience
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. Strong requests explain the training value and how the change fits the local-lab purpose of this repository.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        - New training scenario
+        - Documentation improvement
+        - Workflow or automation improvement
+        - Windows support
+        - Reporting or release presentation
+        - Contributor experience
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      placeholder: New contributors do not have a clear path for choosing between issues and discussions.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      placeholder: Add a CONTRIBUTING guide, issue forms, and a PR template that link to Discussions.
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Why is this valuable?
+      description: Explain how this helps learners, contributors, or maintainers.
+      placeholder: This makes the repo easier to contribute to and creates a clearer path for community activity.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra context
+      description: Add examples, references, or related issues and discussions.

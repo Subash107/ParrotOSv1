@@ -1,0 +1,67 @@
+name: Bug report
+description: Report a reproducible problem in the lab, docs, scripts, or workflows
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please include enough detail for someone else to reproduce it in the local training lab.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Lab application
+        - API or admin flow
+        - Documentation
+        - GitHub Actions
+        - Windows scripts
+        - Remote tooling
+        - Wireless assessment templates
+        - Release or repository presentation
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug and the expected behavior.
+      placeholder: The workflow failed after the docker compose build step, but I expected the smoke checks to continue.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Share exact steps, commands, or pages used.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, shell, browser, Docker, or any other relevant setup details.
+      placeholder: Windows 11, PowerShell, Docker Desktop 4.x, Chrome 135
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Paste logs, screenshots, or report paths if available.
+      placeholder: reports/windows-test-run_YYYYMMDD_HHMMSS/summary.json
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmation
+      options:
+        - label: I reproduced this in a local training environment I control.
+          required: true
+        - label: I did not include secrets, tokens, or real target data.
+          required: true
