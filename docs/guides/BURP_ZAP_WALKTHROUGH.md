@@ -1,6 +1,6 @@
 # Burp And ZAP Walkthrough
 
-This walkthrough shows how to use Burp Suite and OWASP ZAP against the `acme-devsecops-lab` environment running on Parrot OS.
+This walkthrough shows how to use Burp Suite and OWASP ZAP against the `localbugbountylabendtoend` environment running on Parrot OS.
 
 ## Target URLs
 
@@ -15,7 +15,7 @@ This walkthrough shows how to use Burp Suite and OWASP ZAP against the `acme-dev
 Make sure the lab is running:
 
 ```bash
-cd ~/acme-devsecops-lab
+cd ~/localbugbountylabendtoend
 unset DOCKER_HOST
 docker compose ps
 ```
@@ -149,7 +149,7 @@ Options in Burp:
 Generate a forged admin token in the lab directory:
 
 ```bash
-cd ~/acme-devsecops-lab
+cd ~/localbugbountylabendtoend
 python3 tools/forge_admin_jwt.py
 ```
 
@@ -162,9 +162,9 @@ That prints a valid admin token for:
 
 You can also read the saved values directly:
 
-- original token source: `~/acme-devsecops-lab/reports/login-alice-live.json`
-- forged token source: `~/acme-devsecops-lab/reports/forged_admin_jwt.txt`
-- decoded comparison: `~/acme-devsecops-lab/reports/jwt_compare.json`
+- original token source: `~/localbugbountylabendtoend/reports/login-alice-live.json`
+- forged token source: `~/localbugbountylabendtoend/reports/forged_admin_jwt.txt`
+- decoded comparison: `~/localbugbountylabendtoend/reports/jwt_compare.json`
 
 ### 5.1 Compare the original and forged token in Decoder
 
@@ -308,12 +308,12 @@ Expected result:
 
 Either copy the forged token from:
 
-- `~/acme-devsecops-lab/reports/forged_admin_jwt.txt`
+- `~/localbugbountylabendtoend/reports/forged_admin_jwt.txt`
 
 or generate a fresh one:
 
 ```bash
-cd ~/acme-devsecops-lab
+cd ~/localbugbountylabendtoend
 python3 tools/forge_admin_jwt.py
 ```
 

@@ -118,6 +118,10 @@ Generated scan output and exploit artifacts are written to `reports/`.
 
 - [docs/guides/METHODOLOGY.md](docs/guides/METHODOLOGY.md) for the phase-by-phase testing workflow.
 - [docs/guides/BURP_ZAP_WALKTHROUGH.md](docs/guides/BURP_ZAP_WALKTHROUGH.md) for the browser-proxy walkthrough.
+- [docs/guides/PARROTOS_TESTING_GUIDE.md](docs/guides/PARROTOS_TESTING_GUIDE.md) for the verified ParrotOS tool inventory and target list.
+- [docs/guides/WINDOWS_BATCH_TESTING.md](docs/guides/WINDOWS_BATCH_TESTING.md) for repeatable Windows batch checks and report generation.
+- [docs/guides/BUG_BOUNTY_REWARDS_LAB.md](docs/guides/BUG_BOUNTY_REWARDS_LAB.md) for the reward-style learning path and challenge board.
+- [docs/guides/CTF_STYLE_REWARD_BOARD.md](docs/guides/CTF_STYLE_REWARD_BOARD.md) for beginner, intermediate, advanced levels and training flags.
 - [docs/reports/FINDINGS.md](docs/reports/FINDINGS.md) for the validated findings summary.
 - [docs/reports/BUG_BOUNTY_REPORT.md](docs/reports/BUG_BOUNTY_REPORT.md) for a formal bug bounty report.
 - [docs/reports/EXECUTIVE_REPORT.md](docs/reports/EXECUTIVE_REPORT.md) for a leadership-friendly summary.

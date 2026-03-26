@@ -1,6 +1,6 @@
 SHELL := bash
 
-.PHONY: help bootstrap bootstrap-windows config build up down logs token badge-preview remote-methodology remote-recon
+.PHONY: help bootstrap bootstrap-windows config build up down logs token badge-preview remote-methodology remote-recon remote-tool-inventory
 
 help:
 	@echo "Available targets:"
@@ -15,6 +15,7 @@ help:
 	@echo "  badge-preview      Generate a local preview completion badge"
 	@echo "  remote-methodology Run the remote methodology helper"
 	@echo "  remote-recon       Run the remote recon helper"
+	@echo "  remote-tool-inventory Run the remote tool inventory helper"
 
 bootstrap:
 	@bash scripts/setup/bootstrap.sh
@@ -48,3 +49,6 @@ remote-methodology:
 
 remote-recon:
 	@bash scripts/remote/remote_recon_scan.sh
+
+remote-tool-inventory:
+	@bash scripts/remote/remote_tool_inventory.sh

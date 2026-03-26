@@ -1,6 +1,6 @@
 # Acme Lab Testing Methodology
 
-This runbook applies a practical bug bounty workflow to the local `acme-devsecops-lab` environment.
+This runbook applies a practical bug bounty workflow to the local `localbugbountylabendtoend` environment.
 
 ## Target Scope
 
