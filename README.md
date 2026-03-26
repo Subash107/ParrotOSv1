@@ -16,6 +16,8 @@ An intentionally vulnerable multi-service lab for practicing realistic bug bount
 
 Subash earned the `Full Lab Completion` award for completing the lab workflow, validation, and reporting path.
 
+If you want to show this badge in your GitHub profile README too, use the ready-made snippet in [docs/profile/GITHUB_PROFILE_SNIPPET.md](docs/profile/GITHUB_PROFILE_SNIPPET.md).
+
 ## Why This Repo
 
 - Practice realistic vulnerability chaining across multiple services.
