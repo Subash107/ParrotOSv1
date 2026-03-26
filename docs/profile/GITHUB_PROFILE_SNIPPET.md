@@ -14,7 +14,7 @@ This version is the most reliable on GitHub because it embeds the badge image fr
 ```md
 ## Lab Certifications
 
-[![Subash completion badge](https://raw.githubusercontent.com/Subash107/ParrotOS/main/achievements/badges/subash107-full-lab-completion.svg)](https://github.com/Subash107/ParrotOS/blob/main/achievements/records/subash107-full-lab-completion.md)
+[![Subash completion badge](https://raw.githubusercontent.com/Subash107/ParrotOSv1/main/achievements/badges/subash107-full-lab-completion.svg)](https://github.com/Subash107/ParrotOSv1/blob/main/achievements/records/subash107-full-lab-completion.md)
 ```
 
 ## Showcase Version
@@ -24,9 +24,9 @@ Use this if you want the badge to stand out more in your profile README.
 ```html
 <h2>Lab Certifications</h2>
 <p>
-  <a href="https://github.com/Subash107/ParrotOS/blob/main/achievements/records/subash107-full-lab-completion.md">
+  <a href="https://github.com/Subash107/ParrotOSv1/blob/main/achievements/records/subash107-full-lab-completion.md">
     <img
-      src="https://raw.githubusercontent.com/Subash107/ParrotOS/main/achievements/badges/subash107-full-lab-completion.svg"
+      src="https://raw.githubusercontent.com/Subash107/ParrotOSv1/main/achievements/badges/subash107-full-lab-completion.svg"
       alt="Subash - Full Lab Completion badge"
       width="420"
     />
@@ -43,13 +43,13 @@ Use this if you want the badge to stand out more in your profile README.
 Use this if you want a simple text-first profile.
 
 ```md
-- [Acme DevSecOps Bug Bounty Simulation Lab - Full Lab Completion](https://github.com/Subash107/ParrotOS/blob/main/achievements/records/subash107-full-lab-completion.md)
+- [Acme DevSecOps Bug Bounty Simulation Lab - Full Lab Completion](https://github.com/Subash107/ParrotOSv1/blob/main/achievements/records/subash107-full-lab-completion.md)
 ```
 
 ## Optional Certificate Link
 
 If you want to link directly to the generated certificate file, use:
 
-- `https://github.com/Subash107/ParrotOS/blob/main/achievements/certificates/subash107-full-lab-completion.html`
+- `https://github.com/Subash107/ParrotOSv1/blob/main/achievements/certificates/subash107-full-lab-completion.html`
 
 GitHub shows HTML files as repository content, so the award record link is usually the nicer public-facing destination.

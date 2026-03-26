@@ -1,6 +1,6 @@
 # ParrotOS Bug Hunting Local Lab
 
-[![Security Lab Workflow](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml/badge.svg?branch=main)](https://github.com/Subash107/ParrotOS/actions/workflows/security-lab.yml)
+[![Security Lab Workflow](https://github.com/Subash107/ParrotOSv1/actions/workflows/security-lab.yml/badge.svg?branch=main)](https://github.com/Subash107/ParrotOSv1/actions/workflows/security-lab.yml)
 [![Docker Compose](https://img.shields.io/badge/docker-compose-lab-blue?logo=docker)](#quick-start)
 [![Node 20](https://img.shields.io/badge/node-20-339933?logo=node.js&logoColor=white)](#repository-layout)
 [![Training Only](https://img.shields.io/badge/use-training%20only-red)](#safety-note)
@@ -301,7 +301,7 @@ curl "http://localhost:9000/public-assets/security-note.txt"
 ## Contributing and Community
 
 - Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
-- Use [GitHub Discussions](https://github.com/Subash107/ParrotOS/discussions) for questions, lab ideas, badge-track suggestions, and learning conversations.
+- Use [GitHub Discussions](https://github.com/Subash107/ParrotOSv1/discussions) for questions, lab ideas, badge-track suggestions, and learning conversations.
 - Use the built-in issue forms for reproducible bugs and scoped feature requests.
 - Open pull requests with validation notes, report paths, and screenshots when they help reviewers understand the change.
 

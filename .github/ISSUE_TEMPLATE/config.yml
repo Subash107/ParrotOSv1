@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Questions and ideas
-    url: https://github.com/Subash107/ParrotOS/discussions
+    url: https://github.com/Subash107/ParrotOSv1/discussions
     about: Use GitHub Discussions for Q&A, project ideas, walkthrough help, and badge-track suggestions.
   - name: Testing guides
-    url: https://github.com/Subash107/ParrotOS/tree/main/docs/guides
+    url: https://github.com/Subash107/ParrotOSv1/tree/main/docs/guides
     about: Check the project guides before opening an issue about usage or expected lab behavior.
