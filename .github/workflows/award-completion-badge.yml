@@ -1,0 +1,113 @@
+name: award-completion-badge
+
+on:
+  workflow_dispatch:
+    inputs:
+      recipient_name:
+        description: Name that should appear on the badge and certificate
+        required: true
+        type: string
+      github_username:
+        description: Optional GitHub username for the award record
+        required: false
+        type: string
+      track:
+        description: Completion track to award
+        required: true
+        type: choice
+        options:
+          - Full Lab Completion
+          - Exploitation Track
+          - Reporting Track
+          - Recon Track
+      completion_date:
+        description: Optional completion date in YYYY-MM-DD format
+        required: false
+        type: string
+      evidence_summary:
+        description: Short summary of how the recipient completed the lab
+        required: false
+        type: string
+      badge_slug:
+        description: Optional custom slug for generated files
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  award:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Generate completion assets
+        id: generate
+        env:
+          RECIPIENT_NAME: ${{ inputs.recipient_name }}
+          GITHUB_USERNAME: ${{ inputs.github_username }}
+          TRACK: ${{ inputs.track }}
+          COMPLETION_DATE: ${{ inputs.completion_date }}
+          EVIDENCE_SUMMARY: ${{ inputs.evidence_summary }}
+          BADGE_SLUG: ${{ inputs.badge_slug }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python tools/generate_completion_assets.py \
+            --recipient-name "$RECIPIENT_NAME" \
+            --github-username "$GITHUB_USERNAME" \
+            --track "$TRACK" \
+            --completion-date "$COMPLETION_DATE" \
+            --evidence-summary "$EVIDENCE_SUMMARY" \
+            --badge-slug "$BADGE_SLUG" \
+            --repo-url "$REPO_URL" \
+            --workflow-run-url "$WORKFLOW_RUN_URL" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Upload completion assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: completion-${{ steps.generate.outputs.badge_slug }}
+          path: |
+            ${{ steps.generate.outputs.badge_path }}
+            ${{ steps.generate.outputs.certificate_path }}
+            ${{ steps.generate.outputs.record_path }}
+
+      - name: Commit generated assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add achievements
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Award completion badge: ${{ steps.generate.outputs.badge_slug }}"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Write workflow summary
+        run: |
+          {
+            echo "## Completion badge awarded"
+            echo
+            echo "- Recipient: ${{ inputs.recipient_name }}"
+            echo "- Track: ${{ inputs.track }}"
+            echo "- Badge: [${{ steps.generate.outputs.badge_path }}](${{ github.server_url }}/${{ github.repository }}/blob/main/${{ steps.generate.outputs.badge_path }})"
+            echo "- Certificate: [${{ steps.generate.outputs.certificate_path }}](${{ github.server_url }}/${{ github.repository }}/blob/main/${{ steps.generate.outputs.certificate_path }})"
+            echo "- Record: [${{ steps.generate.outputs.record_path }}](${{ github.server_url }}/${{ github.repository }}/blob/main/${{ steps.generate.outputs.record_path }})"
+            echo
+            echo "### Embed snippet"
+            echo
+            echo '```md'
+            echo "${{ steps.generate.outputs.badge_markdown }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,6 +1,6 @@
 SHELL := bash
 
-.PHONY: help bootstrap bootstrap-windows config build up down logs token remote-methodology remote-recon
+.PHONY: help bootstrap bootstrap-windows config build up down logs token badge-preview remote-methodology remote-recon
 
 help:
 	@echo "Available targets:"
@@ -12,6 +12,7 @@ help:
 	@echo "  down               Stop the lab and remove volumes"
 	@echo "  logs               Follow docker compose logs"
 	@echo "  token              Generate a forged admin JWT for the lab"
+	@echo "  badge-preview      Generate a local preview completion badge"
 	@echo "  remote-methodology Run the remote methodology helper"
 	@echo "  remote-recon       Run the remote recon helper"
 
@@ -38,6 +39,9 @@ logs:
 
 token:
 	@python tools/forge_admin_jwt.py || python3 tools/forge_admin_jwt.py
+
+badge-preview:
+	@python tools/generate_completion_assets.py --recipient-name "Demo Researcher" --github-username demo --track "Full Lab Completion" --output-root reports/preview-awards || python3 tools/generate_completion_assets.py --recipient-name "Demo Researcher" --github-username demo --track "Full Lab Completion" --output-root reports/preview-awards
 
 remote-methodology:
 	@bash scripts/remote/remote_methodology_check.sh

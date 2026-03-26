@@ -128,10 +128,40 @@ If you have `make` available, the root [Makefile](Makefile) wraps the most commo
 - `make down`
 - `make logs`
 - `make token`
+- `make badge-preview`
 - `make remote-methodology`
 - `make remote-recon`
 
 The repo also includes a root [`.editorconfig`](.editorconfig) for consistent editor defaults.
+
+## Completion Badges
+
+This repo can now award a personal completion badge and certificate through GitHub Actions.
+
+### How to earn one
+
+1. Complete the lab and keep supporting evidence in `reports/` or your write-up.
+2. Validate your work using the methodology and reporting docs in [`docs/`](docs).
+3. Open the `Actions` tab in GitHub.
+4. Run the `award-completion-badge` workflow.
+5. Enter your name, optional GitHub username, completion track, and evidence summary.
+
+The workflow will generate:
+
+- a personal SVG badge in [`achievements/badges/`](achievements/badges)
+- a certificate-style HTML page in [`achievements/certificates/`](achievements/certificates)
+- a markdown award record in [`achievements/records/`](achievements/records)
+
+The generated assets are also uploaded as workflow artifacts for easy download.
+
+### Completion tracks
+
+- `Full Lab Completion`
+- `Exploitation Track`
+- `Reporting Track`
+- `Recon Track`
+
+For folder structure and usage notes, see [`achievements/README.md`](achievements/README.md).
 
 ## Vulnerability Coverage
 
