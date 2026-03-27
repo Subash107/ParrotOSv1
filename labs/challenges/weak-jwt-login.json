@@ -1,0 +1,46 @@
+{
+  "id": "weak-jwt-login",
+  "title": "Weak JWT configuration on /login",
+  "severity": "Medium",
+  "summary": "The API login returns a signed JWT that includes a trusted role claim and no expiration timestamp.",
+  "track": "Auth And Token Abuse",
+  "level": "Intermediate",
+  "points": 100,
+  "reward": "Token Breaker",
+  "flag": "ACME{jwt_role_claim_without_expiry}",
+  "why_it_matters": "Weak JWT design teaches how attackers abuse missing expiry and trusted client-side role claims.",
+  "manual_steps": [
+    "Log in as alice on the app or call POST /login directly.",
+    "Capture the returned JWT and decode the payload.",
+    "Confirm there is no exp claim and the role field is trusted in the token."
+  ],
+  "hint_ladder": [
+    "Look closely at the token returned by POST /login.",
+    "Decode the JWT payload and inspect which claims are present.",
+    "The flag is earned when you confirm the token keeps a role claim but no expiration."
+  ],
+  "what_to_learn": [
+    "How JWTs are structured and decoded.",
+    "Why signed tokens still fail when weak secrets and dangerous claims are trusted.",
+    "Why expiration and server-side authorization both matter."
+  ],
+  "remediation": [
+    "Use a strong random signing secret.",
+    "Add token expiration and rotation.",
+    "Do not trust privileged claims without server-side checks."
+  ],
+  "evidence": [
+    "raw/login_request.json",
+    "raw/login_response.json"
+  ],
+  "validator": {
+    "kind": "weak_jwt",
+    "response_path": "raw/login_response.json",
+    "required_claims": [
+      "role"
+    ],
+    "missing_claims": [
+      "exp"
+    ]
+  }
+}

@@ -4,10 +4,21 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_BASE_URL = process.env.API_BASE_URL || "http://api.acme.local:3000";
+const SECURITY_MODE = process.env.SECURITY_MODE || "vulnerable";
+const IS_REMEDIATED = SECURITY_MODE === "remediated";
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
 
 function parseToken(token) {
   if (!token) {
@@ -57,14 +68,20 @@ async function loadComments() {
 }
 
 function renderHome({ tokenPayload, comments, notice, error }) {
+  const renderValue = (value) => (IS_REMEDIATED ? escapeHtml(value ?? "") : String(value ?? ""));
+  const renderCommentValue = (value) => (IS_REMEDIATED ? String(value ?? "") : String(value ?? ""));
   const sessionCard = tokenPayload
     ? `
       <section class="panel">
         <h2>Current Session</h2>
-        <p><strong>User:</strong> ${tokenPayload.username}</p>
-        <p><strong>Role from token:</strong> ${tokenPayload.role}</p>
-        <p><strong>User ID:</strong> ${tokenPayload.sub}</p>
-        <p>This lab intentionally stores the JWT in a JavaScript-readable cookie named <code>session</code>.</p>
+        <p><strong>User:</strong> ${renderValue(tokenPayload.username)}</p>
+        <p><strong>Role from token:</strong> ${renderValue(tokenPayload.role)}</p>
+        <p><strong>User ID:</strong> ${renderValue(tokenPayload.sub)}</p>
+        <p>${
+          IS_REMEDIATED
+            ? "Remediated mode sets the session cookie as HttpOnly and stricter than the training baseline."
+            : "This lab intentionally stores the JWT in a JavaScript-readable cookie named <code>session</code>."
+        }</p>
       </section>
     `
     : `
@@ -80,10 +97,10 @@ function renderHome({ tokenPayload, comments, notice, error }) {
           (comment) => `
             <article class="comment">
               <div class="comment-meta">
-                <strong>${comment.author}</strong>
-                <span>${comment.created_at}</span>
+                <strong>${renderCommentValue(comment.author)}</strong>
+                <span>${renderValue(comment.created_at)}</span>
               </div>
-              <div class="comment-body">${comment.content}</div>
+              <div class="comment-body">${renderCommentValue(comment.content)}</div>
             </article>
           `
         )
@@ -174,8 +191,8 @@ function renderHome({ tokenPayload, comments, notice, error }) {
   <body>
     <h1>Acme Employee Hub</h1>
     <p>This intentionally vulnerable portal mirrors a company front end that talks to a separate API and admin surface.</p>
-    ${notice ? `<div class="notice">${notice}</div>` : ""}
-    ${error ? `<div class="error">${error}</div>` : ""}
+    ${notice ? `<div class="notice">${renderValue(notice)}</div>` : ""}
+    ${error ? `<div class="error">${renderValue(error)}</div>` : ""}
     <div class="layout">
       <section class="panel">
         <h2>Login</h2>
@@ -257,11 +274,17 @@ app.post("/login", async (req, res) => {
     });
 
     res.cookie("session", data.token, {
-      httpOnly: false,
-      sameSite: "lax"
+      httpOnly: IS_REMEDIATED,
+      sameSite: IS_REMEDIATED ? "strict" : "lax"
     });
 
-    res.redirect("/?notice=Logged in. The JWT cookie is readable by JavaScript.");
+    res.redirect(
+      `/?notice=${encodeURIComponent(
+        IS_REMEDIATED
+          ? "Logged in. The session cookie is now HttpOnly in remediated mode."
+          : "Logged in. The JWT cookie is readable by JavaScript."
+      )}`
+    );
   } catch (error) {
     res.redirect(`/?error=${encodeURIComponent(error.message)}`);
   }
@@ -297,6 +320,10 @@ app.get("/logout", (_req, res) => {
 
 app.get("/profile", (req, res) => {
   const bio = req.query.bio || "";
+  const renderedBio = IS_REMEDIATED ? escapeHtml(bio) : bio;
+  const guidance = IS_REMEDIATED
+    ? "Your profile bio is rendered below with HTML escaping in remediated mode."
+    : "Your profile bio is rendered below without sanitization.";
 
   res.send(`<!doctype html>
 <html lang="en">
@@ -327,8 +354,8 @@ app.get("/profile", (req, res) => {
   <body>
     <div class="card">
       <h1>Profile Preview</h1>
-      <p>Your profile bio is rendered below without sanitization.</p>
-      <div class="preview">${bio}</div>
+      <p>${guidance}</p>
+      <div class="preview">${renderedBio}</div>
       <p><a href="/">Back to Acme Employee Hub</a></p>
     </div>
   </body>

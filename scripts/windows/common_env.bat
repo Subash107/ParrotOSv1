@@ -5,6 +5,7 @@ set "REPORTS_DIR=%PROJECT_ROOT%\reports"
 set "COMPOSE_FILE=%PROJECT_ROOT%\docker-compose.yml"
 set "LOG_PREFIX=[lab-windows]"
 if not defined KEEP_WINDOWS_REPORTS set "KEEP_WINDOWS_REPORTS=10"
+if not defined LAB_SCENARIO_PROFILE set "LAB_SCENARIO_PROFILE=vulnerable"
 if not exist "%REPORTS_DIR%" mkdir "%REPORTS_DIR%" >nul 2>&1
 
 if "%~1"=="" (

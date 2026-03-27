@@ -1,0 +1,41 @@
+{
+  "id": "reflected-xss-profile",
+  "title": "Reflected XSS on /profile",
+  "severity": "High",
+  "summary": "The profile preview reflects the supplied bio payload directly into the HTML response without sanitization.",
+  "track": "Client-side Injection",
+  "level": "Beginner",
+  "points": 150,
+  "reward": "Link Crafter",
+  "flag": "ACME{profile_bio_reflection_xss}",
+  "why_it_matters": "Reflected XSS teaches payload testing, URL encoding, browser execution, and how bugs become phishing-style attack chains.",
+  "manual_steps": [
+    "Visit /profile?bio=<script>alert(1)</script>.",
+    "Observe that the payload is reflected directly into the HTML response.",
+    "Confirm browser execution manually if you want a popup screenshot."
+  ],
+  "hint_ladder": [
+    "The profile preview is a better target than the login form.",
+    "Try a harmless script payload in the bio query parameter.",
+    "The flag is earned when your payload is reflected unsanitized in the profile preview response."
+  ],
+  "what_to_learn": [
+    "How reflection-based injection appears in raw responses.",
+    "Why output encoding matters for query parameters.",
+    "How reflected XSS is demonstrated in a report."
+  ],
+  "remediation": [
+    "HTML-encode reflected user input before rendering.",
+    "Apply input handling rules appropriate to the rendering context.",
+    "Use CSP as a defense-in-depth control."
+  ],
+  "evidence": [
+    "raw/reflected_xss_payload.txt",
+    "raw/reflected_xss.html"
+  ],
+  "validator": {
+    "kind": "payload_reflection",
+    "payload_path": "raw/reflected_xss_payload.txt",
+    "content_path": "raw/reflected_xss.html"
+  }
+}

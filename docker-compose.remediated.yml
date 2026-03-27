@@ -1,0 +1,29 @@
+services:
+  app:
+    environment:
+      SECURITY_MODE: remediated
+
+  api:
+    environment:
+      JWT_SECRET: remediated-lab-secret-2026
+      SECURITY_MODE: remediated
+      MINIO_ROOT_USER: acme-storage-admin
+      MINIO_ROOT_PASSWORD: AcmeStorage2026
+
+  admin:
+    environment:
+      JWT_SECRET: remediated-lab-secret-2026
+      SECURITY_MODE: remediated
+      STORAGE_ACCESS_KEY: acme-storage-admin
+      STORAGE_SECRET_KEY: AcmeStorage2026
+
+  storage:
+    environment:
+      MINIO_ROOT_USER: acme-storage-admin
+      MINIO_ROOT_PASSWORD: AcmeStorage2026
+
+  minio-init:
+    environment:
+      MINIO_ALIAS_ROOT_USER: acme-storage-admin
+      MINIO_ALIAS_ROOT_PASSWORD: AcmeStorage2026
+      STORAGE_MODE: remediated

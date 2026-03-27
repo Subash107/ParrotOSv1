@@ -1,0 +1,50 @@
+{
+  "id": "idor-user-records",
+  "title": "IDOR on /api/user?id=",
+  "severity": "High",
+  "summary": "Changing the id parameter exposes different users, including passwords and API keys, without authorization.",
+  "track": "Access Control",
+  "level": "Beginner",
+  "points": 150,
+  "reward": "Object Explorer",
+  "flag": "ACME{idor_user_records_exposed}",
+  "why_it_matters": "IDOR is a common real bug bounty class because simple identifier changes can expose other users' data.",
+  "manual_steps": [
+    "Open /api/user?id=1 in the browser or curl.",
+    "Change the id value to 2 and then 3.",
+    "Observe that other users, including admin, are disclosed without authorization."
+  ],
+  "hint_ladder": [
+    "Try changing only the numeric id value in the same endpoint.",
+    "Compare the returned usernames and sensitive fields.",
+    "The flag is earned when three different user records are exposed by changing only id."
+  ],
+  "what_to_learn": [
+    "How to test object references safely and systematically.",
+    "Which sensitive fields make IDOR findings more severe.",
+    "How to write a clean impact statement for authorization flaws."
+  ],
+  "remediation": [
+    "Enforce object-level authorization for every requested record.",
+    "Return only the caller's own data unless elevated access is verified.",
+    "Avoid exposing sensitive fields like passwords and API keys."
+  ],
+  "evidence": [
+    "raw/idor_user_1.json",
+    "raw/idor_user_2.json",
+    "raw/idor_user_3.json"
+  ],
+  "validator": {
+    "kind": "idor_user_records",
+    "user_paths": [
+      "raw/idor_user_1.json",
+      "raw/idor_user_2.json",
+      "raw/idor_user_3.json"
+    ],
+    "required_fields": [
+      "password",
+      "api_key"
+    ],
+    "minimum_unique_users": 3
+  }
+}

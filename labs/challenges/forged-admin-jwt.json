@@ -1,0 +1,46 @@
+{
+  "id": "forged-admin-jwt",
+  "title": "Forged JWT grants /api/admin access",
+  "severity": "Critical",
+  "summary": "A token signed with the weak lab secret and a tampered role claim is accepted by /api/admin, allowing privilege escalation to admin data.",
+  "track": "Auth And Token Abuse",
+  "level": "Advanced",
+  "points": 225,
+  "reward": "Token Forger",
+  "flag": "ACME{forged_jwt_reaches_admin_api}",
+  "why_it_matters": "JWT forgery turns weak signing secrets and client-controlled role claims into a full server-side privilege escalation path.",
+  "manual_steps": [
+    "Capture a normal user token or start from the known weak secret in the lab.",
+    "Forge a new JWT with role set to admin.",
+    "Send the forged token to GET /api/admin and confirm privileged access."
+  ],
+  "hint_ladder": [
+    "The weak JWT setup is only the first half of the chain.",
+    "Try using the forged token against the admin-only API endpoint instead of the browser app.",
+    "The flag is earned when a forged admin token returns the protected /api/admin data."
+  ],
+  "what_to_learn": [
+    "How weak secrets and trusted client claims combine into real privilege escalation.",
+    "How to move from token analysis to exploit validation.",
+    "Why server-side authorization must not depend only on client-signed role fields."
+  ],
+  "remediation": [
+    "Use a strong random signing secret and rotate it safely.",
+    "Enforce authorization from server-side identity data, not only token role claims.",
+    "Reject forged or tampered tokens and monitor privileged endpoint access."
+  ],
+  "evidence": [
+    "raw/forged_admin_payload.json",
+    "raw/forged_admin_token.txt",
+    "raw/api_admin_forged.status.txt",
+    "raw/api_admin_forged.json"
+  ],
+  "validator": {
+    "kind": "forged_admin_api_access",
+    "status_path": "raw/api_admin_forged.status.txt",
+    "response_path": "raw/api_admin_forged.json",
+    "required_role_path": "requestedBy.role",
+    "required_role_value": "admin",
+    "required_array_key": "users"
+  }
+}

@@ -13,43 +13,35 @@ if errorlevel 1 (
   exit /b 1
 )
 
-call "%~dp0check_health.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_jwt_login.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_idor.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_admin_export.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_reflected_xss.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_stored_xss.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
-
-call "%~dp0check_storage.bat" "%REPORT_ROOT%"
-if errorlevel 1 set /a SCRIPT_FAILURES+=1
+echo %LOG_PREFIX% Running shared scenario capture and validation...
+python "%PROJECT_ROOT%\tools\run_lab_scenario.py" --report-root "%REPORT_ROOT%" --profile "%LAB_SCENARIO_PROFILE%" --capture-source live --compose-file "%COMPOSE_FILE%"
+set "SCENARIO_EXIT=%ERRORLEVEL%"
+if "%SCENARIO_EXIT%"=="9009" (
+  py -3 "%PROJECT_ROOT%\tools\run_lab_scenario.py" --report-root "%REPORT_ROOT%" --profile "%LAB_SCENARIO_PROFILE%" --capture-source live --compose-file "%COMPOSE_FILE%"
+  set "SCENARIO_EXIT=%ERRORLEVEL%"
+)
+if not "%SCENARIO_EXIT%"=="0" set /a SCRIPT_FAILURES+=1
 
 python "%PROJECT_ROOT%\tools\generate_windows_test_report.py" --report-root "%REPORT_ROOT%"
-if errorlevel 1 (
+set "WINDOWS_REPORT_EXIT=%ERRORLEVEL%"
+if "%WINDOWS_REPORT_EXIT%"=="9009" (
   py -3 "%PROJECT_ROOT%\tools\generate_windows_test_report.py" --report-root "%REPORT_ROOT%"
+  set "WINDOWS_REPORT_EXIT=%ERRORLEVEL%"
 )
 
-if errorlevel 1 (
+if not "%WINDOWS_REPORT_EXIT%"=="0" (
   echo %LOG_PREFIX% Report generation failed.
   exit /b 1
 )
 
 python "%PROJECT_ROOT%\tools\generate_learning_lab_report.py" --report-root "%REPORT_ROOT%"
-if errorlevel 1 (
+set "LEARNING_REPORT_EXIT=%ERRORLEVEL%"
+if "%LEARNING_REPORT_EXIT%"=="9009" (
   py -3 "%PROJECT_ROOT%\tools\generate_learning_lab_report.py" --report-root "%REPORT_ROOT%"
+  set "LEARNING_REPORT_EXIT=%ERRORLEVEL%"
 )
 
-if errorlevel 1 (
+if not "%LEARNING_REPORT_EXIT%"=="0" (
   echo %LOG_PREFIX% Learning asset generation failed.
   exit /b 1
 )

@@ -1,0 +1,46 @@
+{
+  "id": "admin-api-sensitive-exposure",
+  "title": "Admin API overexposes storage secrets and user API keys",
+  "severity": "High",
+  "summary": "The legitimate admin API response exposes storage credentials and user API keys that are not necessary for routine dashboard access.",
+  "track": "Sensitive Data Exposure",
+  "level": "Intermediate",
+  "points": 160,
+  "reward": "Secret Hoarder",
+  "flag": "ACME{admin_api_exposes_storage_and_user_secrets}",
+  "why_it_matters": "Overexposed admin responses expand blast radius because a single authenticated request leaks reusable secrets for other systems and users.",
+  "manual_steps": [
+    "Log in as admin through POST /login to obtain a valid admin token.",
+    "Send that token to GET /api/admin.",
+    "Review the response for infrastructure secrets and per-user API keys."
+  ],
+  "hint_ladder": [
+    "Use a real admin token instead of the header-based admin panel shortcut.",
+    "Look inside the infrastructure object and each user record returned by /api/admin.",
+    "The flag is earned when a normal admin response includes both storage secrets and user API keys."
+  ],
+  "what_to_learn": [
+    "Why legitimate admin access still needs least-privilege response shaping.",
+    "How to separate access control issues from sensitive-data-overexposure issues.",
+    "How a single authenticated response can become a pivot point into more systems."
+  ],
+  "remediation": [
+    "Return only data required for the admin task being performed.",
+    "Remove storage credentials and reusable secrets from application responses.",
+    "Scope admin data views to minimal metadata rather than full secret-bearing records."
+  ],
+  "evidence": [
+    "raw/admin_login_request.json",
+    "raw/admin_login_response.json",
+    "raw/api_admin_legit.status.txt",
+    "raw/api_admin_legit.json"
+  ],
+  "validator": {
+    "kind": "admin_api_sensitive_exposure",
+    "status_path": "raw/api_admin_legit.status.txt",
+    "response_path": "raw/api_admin_legit.json",
+    "required_secret_path": "infrastructure.minioSecretKey",
+    "required_array_key": "users",
+    "required_user_field": "api_key"
+  }
+}

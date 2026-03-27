@@ -102,13 +102,18 @@ If you want to show this badge in your GitHub profile README too, use the ready-
 |-- infrastructure/
 |   |-- database/init.sql
 |   `-- minio/init.sh
+|-- labs/
+|   |-- challenges/
+|   `-- profiles/
 |-- scripts/
 |   |-- remote/
 |   `-- setup/
 |-- tools/
 |   |-- forge_admin_jwt.py
+|   |-- run_lab_scenario.py
 |   `-- parrot_os_ssh_client.py
 |-- .github/workflows/security-lab.yml
+|-- docker-compose.remediated.yml
 |-- docker-compose.yml
 `-- Makefile
 ```
@@ -137,15 +142,95 @@ If you have `make` available, the root [Makefile](Makefile) wraps the most commo
 - `make bootstrap-windows`
 - `make config`
 - `make build`
+- `make build-remediated`
 - `make up`
+- `make up-remediated`
 - `make down`
 - `make logs`
 - `make token`
 - `make badge-preview`
+- `make scenario`
+- `make scenario-remediated`
+- `make compare-modes`
 - `make remote-methodology`
 - `make remote-recon`
 
 The repo also includes a root [`.editorconfig`](.editorconfig) for consistent editor defaults.
+
+## Scenario Engine
+
+The repo now includes a shared scenario engine so the challenge catalog, validation logic, and generated reports all use the same metadata:
+
+- [`labs/challenges/`](labs/challenges) stores one manifest per challenge.
+- [`labs/profiles/`](labs/profiles) defines which challenges a profile expects to reproduce.
+- [`tools/run_lab_scenario.py`](tools/run_lab_scenario.py) captures live evidence and writes a normalized `summary.json`.
+
+Example command:
+
+```bash
+python tools/run_lab_scenario.py --report-root reports/manual-scenario --profile vulnerable --capture-source live --compose-file docker-compose.yml
+```
+
+If you already have evidence in a report folder, reuse it without new HTTP requests:
+
+```bash
+python tools/run_lab_scenario.py --report-root reports/manual-scenario --profile vulnerable --capture-source existing
+```
+
+## Remediated Mode
+
+The repo now includes a real fixed-mode scaffold that hardens the same services without changing the challenge catalog:
+
+- App mode: escapes reflected content and sets the session cookie as `HttpOnly`.
+- API mode: issues expiring JWTs, enforces object-level checks on `/api/user`, verifies admin access server-side, and neutralizes stored payloads.
+- Admin mode: rejects the old `role: admin` header shortcut and requires a verified admin bearer token.
+- Storage mode: rotates away from the default MinIO credentials and removes anonymous access to the public bucket.
+
+If you want to test legitimate remediated admin access, log in to the API as `admin / adminpass` and reuse that bearer token against `admin.acme.local`.
+
+Start the remediated stack:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.remediated.yml up --build
+```
+
+Validate it with the remediated expectations:
+
+```bash
+python tools/run_lab_scenario.py --report-root reports/remediated-scenario --profile remediated --capture-source live --compose-file docker-compose.yml
+```
+
+## Mode Comparison Dashboard
+
+After you have both profile summaries, generate a side-by-side dashboard that compares the same challenge set across insecure and remediated mode:
+
+```bash
+python tools/generate_mode_comparison_dashboard.py --output-root reports/mode-comparison
+```
+
+Or use the convenience wrapper:
+
+```bash
+make compare-modes
+```
+
+The comparison output includes:
+
+- `reports/mode-comparison/COMPARISON_DASHBOARD.html`
+- `reports/mode-comparison/COMPARISON_SUMMARY.md`
+- `reports/mode-comparison/comparison.json`
+
+If you do not pass explicit report roots, the generator auto-discovers the best vulnerable/remediated pair under `reports/` based on shared challenge coverage. You can still pin exact folders when you want:
+
+```bash
+python tools/generate_mode_comparison_dashboard.py --vulnerable-report-root reports/manual-scenario --remediated-report-root reports/remediated-scenario --output-root reports/mode-comparison
+```
+
+Windows users can also run:
+
+```powershell
+.\scripts\windows\generate_mode_comparison.bat
+```
 
 ## Completion Badges
 
@@ -178,9 +263,12 @@ For folder structure and usage notes, see [`achievements/README.md`](achievement
 
 ## Vulnerability Coverage
 
+- Front end session cookie is readable by JavaScript
 - Weak JWT secret: `secret123`
 - JWTs have no expiration
 - Role is trusted directly from the JWT payload
+- Forged JWTs can reach `GET /api/admin`
+- Legitimate admin API responses expose storage secrets and user API keys
 - IDOR on `GET /api/user?id=`
 - Admin panel trusts only `role: admin`
 - Stored and reflected XSS in the front end
@@ -196,6 +284,7 @@ For folder structure and usage notes, see [`achievements/README.md`](achievement
 - Tokens have no expiration
 - The API trusts the `role` field embedded inside the token
 - The front end stores the token in a JavaScript-readable cookie
+- A forged admin token can be used against `GET /api/admin`
 
 ### IDOR
 
@@ -293,10 +382,10 @@ curl "http://localhost:9000/public-assets/security-note.txt"
 
 ## Automation
 
-- [`.github/workflows/security-lab.yml`](.github/workflows/security-lab.yml) builds the Compose stack, runs an Nmap scan, and performs security smoke checks.
+- [`.github/workflows/security-lab.yml`](.github/workflows/security-lab.yml) builds both the vulnerable and remediated Compose stacks, runs an Nmap scan, executes the shared scenario runner, and uploads the generated report artifacts.
 - [`scripts/remote/`](scripts/remote) contains helper scripts for scanning, exploitation, reporting, and Burp-driven verification.
 - [`scripts/setup/`](scripts/setup) contains bootstrap scripts for Windows and Bash-based environments.
-- [`tools/`](tools) contains the JWT forging helper and the Parrot OS SSH client.
+- [`tools/`](tools) contains the JWT forging helper, the shared scenario runner, and the report generators.
 
 ## Contributing and Community
 

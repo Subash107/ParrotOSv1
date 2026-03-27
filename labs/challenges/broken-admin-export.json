@@ -1,0 +1,43 @@
+{
+  "id": "broken-admin-export",
+  "title": "Broken access control on /export via role header",
+  "severity": "Critical",
+  "summary": "Sending only role: admin returns privileged export data, including storage secrets and full user records.",
+  "track": "Access Control",
+  "level": "Intermediate",
+  "points": 200,
+  "reward": "Header Impersonator",
+  "flag": "ACME{trusted_client_role_header}",
+  "why_it_matters": "Trusting a client-supplied privilege header is an easy privilege escalation path and a strong learning case for broken server-side authorization.",
+  "manual_steps": [
+    "Send GET /export to the admin service.",
+    "Add the request header role: admin.",
+    "Observe that privileged export data is returned without real authentication."
+  ],
+  "hint_ladder": [
+    "The admin health endpoint works without special auth, but the real panel needs something extra.",
+    "Try adding a simple header instead of a token or cookie.",
+    "The flag is earned when role: admin alone unlocks the export response."
+  ],
+  "what_to_learn": [
+    "Why authorization must be bound to verified identity, not arbitrary request metadata.",
+    "How to prove business impact from leaked secrets and records.",
+    "How small header changes can produce high-severity findings."
+  ],
+  "remediation": [
+    "Require real authentication before admin endpoints are served.",
+    "Ignore user-controlled privilege headers for authorization decisions.",
+    "Perform role checks on server-side session or token state only."
+  ],
+  "evidence": [
+    "raw/admin_export.status.txt",
+    "raw/admin_export.json"
+  ],
+  "validator": {
+    "kind": "admin_export",
+    "status_path": "raw/admin_export.status.txt",
+    "response_path": "raw/admin_export.json",
+    "required_array_key": "users",
+    "required_secret_path": "storage.secretKey"
+  }
+}

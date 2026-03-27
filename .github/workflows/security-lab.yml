@@ -11,12 +11,26 @@ on:
 jobs:
   compose-and-scan:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - lab_profile: vulnerable
+            compose_args: "-f docker-compose.yml"
+            report_root: reports/ci-run-vulnerable
+          - lab_profile: remediated
+            compose_args: "-f docker-compose.yml -f docker-compose.remediated.yml"
+            report_root: reports/ci-run-remediated
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
       - name: Build and start lab
-        run: docker compose up -d --build
+        run: docker compose ${{ matrix.compose_args }} up -d --build
 
       - name: Wait for services
         run: sleep 35
@@ -29,13 +43,27 @@ jobs:
       - name: Nmap scan
         run: nmap -Pn -sV -p 8080,8081,8082,9000,9001,3306 127.0.0.1
 
-      - name: Basic security smoke checks
+      - name: Shared scenario validation
         run: |
-          curl -fsS http://127.0.0.1:8080/ | grep -q "Acme Employee Hub"
-          curl -fsS http://127.0.0.1:8081/api/user?id=3 | grep -q '"username":"admin"'
-          curl -fsS -H 'role: admin' http://127.0.0.1:8082/export | grep -q '"publicBucket":"public-assets"'
-          curl -fsS http://127.0.0.1:9000/public-assets/security-note.txt | grep -q 'Acme vendor handoff'
+          set +e
+          python tools/run_lab_scenario.py \
+            --report-root ${{ matrix.report_root }} \
+            --profile ${{ matrix.lab_profile }} \
+            --capture-source live \
+            --compose-file docker-compose.yml
+          scenario_exit=$?
+          set -e
+          python tools/generate_windows_test_report.py --report-root ${{ matrix.report_root }}
+          python tools/generate_learning_lab_report.py --report-root ${{ matrix.report_root }}
+          exit $scenario_exit
+
+      - name: Upload scenario artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-scenario-${{ matrix.lab_profile }}
+          path: ${{ matrix.report_root }}
 
       - name: Tear down
         if: always()
-        run: docker compose down -v
+        run: docker compose ${{ matrix.compose_args }} down -v

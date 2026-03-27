@@ -1,0 +1,44 @@
+{
+  "id": "insecure-session-cookie",
+  "title": "Session cookie is readable by JavaScript",
+  "severity": "Medium",
+  "summary": "The application login sets the session cookie without the HttpOnly flag, so browser scripts can read it after login.",
+  "track": "Session Security",
+  "level": "Beginner",
+  "points": 90,
+  "reward": "Cookie Inspector",
+  "flag": "ACME{session_cookie_without_httponly}",
+  "why_it_matters": "Readable session cookies make XSS much more dangerous because injected JavaScript can steal active tokens directly from the browser.",
+  "manual_steps": [
+    "Log in through the app at /login with a browser or interception proxy.",
+    "Inspect the Set-Cookie header on the login response.",
+    "Confirm that the session cookie is missing the HttpOnly attribute."
+  ],
+  "hint_ladder": [
+    "Check the browser-facing app login flow instead of the API response.",
+    "Look for Set-Cookie on the redirect response after a successful login.",
+    "The flag is earned when the session cookie is missing HttpOnly and can be read by JavaScript."
+  ],
+  "what_to_learn": [
+    "How cookie flags reduce the impact of client-side injection flaws.",
+    "Why HttpOnly matters even when tokens are signed.",
+    "How to describe token theft risk in a bug bounty report."
+  ],
+  "remediation": [
+    "Set HttpOnly on the session cookie.",
+    "Use a stricter SameSite policy where possible.",
+    "Avoid storing long-lived bearer tokens in JavaScript-readable browser storage."
+  ],
+  "evidence": [
+    "raw/app_login_response.headers.txt",
+    "raw/app_login_response.status.txt"
+  ],
+  "validator": {
+    "kind": "session_cookie",
+    "headers_path": "raw/app_login_response.headers.txt",
+    "cookie_name": "session",
+    "missing_attributes": [
+      "httponly"
+    ]
+  }
+}

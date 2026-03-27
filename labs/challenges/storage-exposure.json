@@ -1,0 +1,43 @@
+{
+  "id": "storage-exposure",
+  "title": "MinIO storage exposure",
+  "severity": "High",
+  "summary": "The storage console is exposed locally, the public object is readable without authentication, and default MinIO credentials remain configured.",
+  "track": "Secrets And Storage",
+  "level": "Beginner",
+  "points": 125,
+  "reward": "Bucket Diver",
+  "flag": "ACME{public_bucket_default_minio_creds}",
+  "why_it_matters": "Misconfigured storage and unchanged default credentials are common bug bounty wins and excellent practice for cloud misconfiguration reviews.",
+  "manual_steps": [
+    "Open the public object in the browser or curl it anonymously.",
+    "Visit the MinIO console and log in with minioadmin / minioadmin.",
+    "Confirm the public-assets bucket and exposed object are accessible."
+  ],
+  "hint_ladder": [
+    "One object is readable even before you authenticate to the console.",
+    "The admin UI uses the vendor's well-known default credentials.",
+    "The flag is earned when you confirm both anonymous object access and default console credentials."
+  ],
+  "what_to_learn": [
+    "How public object exposure differs from full console compromise.",
+    "Why default credentials are especially dangerous on admin surfaces.",
+    "How to describe storage findings clearly in a report."
+  ],
+  "remediation": [
+    "Replace default credentials immediately.",
+    "Remove unnecessary anonymous access.",
+    "Apply least-privilege bucket policies and review exposed objects."
+  ],
+  "evidence": [
+    "raw/storage_console.html",
+    "raw/storage_public_object_check.txt",
+    "raw/storage_env.txt"
+  ],
+  "validator": {
+    "kind": "storage_exposure",
+    "console_status_path": "raw/storage_console.status.txt",
+    "public_status_path": "raw/storage_public_object_check.status.txt",
+    "env_path": "raw/storage_env.txt"
+  }
+}

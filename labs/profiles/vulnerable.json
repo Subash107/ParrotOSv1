@@ -1,0 +1,59 @@
+{
+  "id": "vulnerable",
+  "name": "Vulnerable Baseline",
+  "description": "Intentionally insecure training baseline for the local bug bounty lab.",
+  "service_checks": [
+    {
+      "name": "App Home",
+      "stem": "app_home",
+      "expected_status": 200
+    },
+    {
+      "name": "App Health",
+      "stem": "app_health",
+      "expected_status": 200
+    },
+    {
+      "name": "API Health",
+      "stem": "api_health",
+      "expected_status": 200
+    },
+    {
+      "name": "Admin Health",
+      "stem": "admin_health",
+      "expected_status": 200
+    },
+    {
+      "name": "Storage Console",
+      "stem": "storage_console_home",
+      "expected_status": 200
+    },
+    {
+      "name": "Public Object",
+      "stem": "storage_public_object",
+      "expected_status": 200
+    }
+  ],
+  "challenge_ids": [
+    "insecure-session-cookie",
+    "weak-jwt-login",
+    "forged-admin-jwt",
+    "admin-api-sensitive-exposure",
+    "idor-user-records",
+    "broken-admin-export",
+    "reflected-xss-profile",
+    "stored-xss-comments",
+    "storage-exposure"
+  ],
+  "challenge_expectations": {
+    "insecure-session-cookie": "Vulnerable",
+    "weak-jwt-login": "Vulnerable",
+    "forged-admin-jwt": "Vulnerable",
+    "admin-api-sensitive-exposure": "Vulnerable",
+    "idor-user-records": "Vulnerable",
+    "broken-admin-export": "Vulnerable",
+    "reflected-xss-profile": "Vulnerable",
+    "stored-xss-comments": "Vulnerable",
+    "storage-exposure": "Vulnerable"
+  }
+}

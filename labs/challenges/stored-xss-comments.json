@@ -1,0 +1,45 @@
+{
+  "id": "stored-xss-comments",
+  "title": "Stored XSS in comment feed",
+  "severity": "High",
+  "summary": "A malicious comment payload is stored and rendered back into the home page and comments API output without sanitization.",
+  "track": "Client-side Injection",
+  "level": "Intermediate",
+  "points": 175,
+  "reward": "Comment Ghost",
+  "flag": "ACME{stored_comment_payload_rendered}",
+  "why_it_matters": "Stored XSS is highly valuable for learning because the payload persists and can affect other users and future page views.",
+  "manual_steps": [
+    "Submit a comment payload such as <img src=x onerror=alert(1)>.",
+    "Reload the home page or fetch the comments API.",
+    "Observe that the payload is stored and returned unsanitized."
+  ],
+  "hint_ladder": [
+    "The comment feed is storing raw HTML-like content already.",
+    "Use a payload that executes when the page renders an invalid image.",
+    "The flag is earned when your comment payload persists and is returned unsanitized from the feed."
+  ],
+  "what_to_learn": [
+    "How storage changes the risk profile of XSS findings.",
+    "Why HTML-rich inputs need sanitization before display.",
+    "How to tie stored XSS to session theft or admin compromise paths."
+  ],
+  "remediation": [
+    "Sanitize or encode comment content before rendering.",
+    "Treat all user content as untrusted input.",
+    "Store session cookies with HttpOnly to reduce exploit impact."
+  ],
+  "evidence": [
+    "raw/stored_xss_payload.txt",
+    "raw/stored_xss_post.body.txt",
+    "raw/stored_xss_home.html",
+    "raw/stored_xss_comments.json"
+  ],
+  "validator": {
+    "kind": "stored_payload",
+    "payload_path": "raw/stored_xss_payload.txt",
+    "html_path": "raw/stored_xss_home.html",
+    "comments_path": "raw/stored_xss_comments.json",
+    "comments_key": "comments"
+  }
+}
