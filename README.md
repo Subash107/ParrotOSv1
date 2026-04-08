@@ -1,4 +1,4 @@
-# ParrotOS Bug Hunting Local Lab
+# ParrotOS Bug Hunting Local Lab End to End
 
 [![Security Lab Workflow](https://github.com/Subash107/ParrotOSv1/actions/workflows/security-lab.yml/badge.svg?branch=main)](https://github.com/Subash107/ParrotOSv1/actions/workflows/security-lab.yml)
 [![Docker Compose](https://img.shields.io/badge/docker-compose-lab-blue?logo=docker)](#quick-start)
